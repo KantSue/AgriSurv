@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Observation</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        input, textarea, button { display: block; margin: 8px 0; width: 300px; }
+        pre { background: #f4f4f4; padding: 10px; }
+        h2 { margin-top: 30px; }
+    </style>
+</head>
+<body>
+
+<h2>Créer une observation</h2>
+<input id="titre" placeholder="Titre">
+<textarea id="contenu" placeholder="Contenu"></textarea>
+<button onclick="createObservation()">Créer</button>
+
+<h2>Lire une observation par ID</h2>
+<input id="id_read" placeholder="ID observation">
+<button onclick="readOne()">Lire</button>
+
+<h2>Lire toutes les observations</h2>
+<button onclick="readAll()">Tout lire</button>
+
+<h2>Rechercher par titre</h2>
+<input id="titre_search" placeholder="Titre">
+<button onclick="searchByTitle()">Chercher</button>
+
+<h2>Supprimer observation</h2>
+<input id="id_delete" placeholder="ID observation">
+<button onclick="deleteObservation()">Supprimer</button>
+
+<h2>Résultat</h2>
+<pre id="result"></pre>
+
+<script>
+const API = "http://localhost:3000/observation";
+
+function show(data) {
+    document.getElementById("result").textContent =
+        JSON.stringify(data, null, 2);
+}
+
+// CREATE
+async function createObservation() {
+    const titre = document.getElementById("titre").value;
+    const contenu = document.getElementById("contenu").value;
+
+    const res = await fetch(API + "/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ titre, contenu })
+    });
+
+    show(await res.json());
+}
+
+// READ ONE
+async function readOne() {
+    const id_observation = document.getElementById("id_read").value;
+
+    const res = await fetch(API + "/read-one", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id_observation })
+    });
+
+    show(await res.json());
+}
+
+// READ ALL
+async function readAll() {
+    const res = await fetch(API + "/read-all", {
+        method: "GET"
+    });
+
+    show(await res.json());
+}
+
+// SEARCH BY TITLE
+async function searchByTitle() {
+    const titre = document.getElementById("titre_search").value;
+
+    const res = await fetch(API + "/search-title", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ titre })
+    });
+
+    show(await res.json());
+}
+
+// DELETE
+async function deleteObservation() {
+    const id = document.getElementById("id_delete").value;
+
+    const res = await fetch(API + "/delete?id_observation=" + id, {
+        method: "DELETE"
+    });
+
+    show(await res.json());
+}
+</script>
+
+</body>
+</html>

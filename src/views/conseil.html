@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Affichage des Observations</title>
+</head>
+<body>
+    <h1>Consulter les Observations</h1>
+
+    <!-- Recherche par titre -->
+    <form id="titleForm">
+        <label>
+            Rechercher par titre :
+            <input type="text" name="titre" required>
+        </label>
+        <button type="submit">Rechercher</button>
+    </form>
+
+    <br>
+
+    <!-- Recherche par date -->
+    <form id="dateForm">
+        <label>
+            Rechercher par date :
+            <input type="date" name="date" required>
+        </label>
+        <button type="submit">Rechercher</button>
+    </form>
+
+    <br>
+
+    <!-- Boutons d'affichage -->
+    <button id="showAll">Afficher toutes les observations</button>
+
+    <br><br>
+
+    <!-- Bouton lecture audio -->
+    <button id="actionBtn" style="display:none;">🔊 Lire</button>
+
+    <br><br>
+
+    <div id="result"></div>
+
+    <script>
+        const resultDiv = document.getElementById('result');
+        const actionBtn = document.getElementById('actionBtn');
+
+        let texteALire = "";
+
+        // Fonction affichage + préparation lecture
+        function afficherResultats(data) {
+            let resultats = [];
+
+            if (Array.isArray(data)) {
+                resultats = data;
+            } else if (data.contenu) {
+                resultats = [data];
+            } else if (data.result && Array.isArray(data.result)) {
+                resultats = data.result;
+            }
+
+            if (resultats.length === 0) {
+                resultDiv.textContent = "Aucun résultat trouvé";
+                actionBtn.style.display = "none";
+                return;
+            }
+
+            resultDiv.innerHTML = "";
+            texteALire = "";
+
+            resultats.forEach(item => {
+                const p = document.createElement("p");
+                p.innerHTML = `
+                    <strong>Titre :</strong> ${item.titre_observation}<br>
+                    <strong>Contenu :</strong> ${item.contenu}<br>
+                    <strong>Date :</strong> ${item.date_obs || "N/A"}
+                `;
+                resultDiv.appendChild(p);
+
+                texteALire += item.contenu + ". ";
+            });
+
+            actionBtn.style.display = "block";
+        }
+
+        // Rechercher par titre
+        document.getElementById('titleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const titre = e.target.titre.value;
+
+            try {
+                const res = await fetch('http://localhost:3000/conseil/bytype', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ titre })
+                });
+                const data = await res.json();
+                afficherResultats(data);
+            } catch (err) {
+                resultDiv.textContent = err.message;
+            }
+        });
+
+        // Rechercher par date
+        document.getElementById('dateForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const date = e.target.date.value;
+
+            try {
+                const res = await fetch('http://localhost:3000/observation/bydate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ date })
+                });
+                const data = await res.json();
+                afficherResultats(data);
+            } catch (err) {
+                resultDiv.textContent = err.message;
+            }
+        });
+
+        // Afficher toutes les observations
+        document.getElementById('showAll').addEventListener('click', async () => {
+            try {
+                const res = await fetch('http://localhost:3000/observation/readAll');
+                const data = await res.json();
+                afficherResultats(data);
+            } catch (err) {
+                resultDiv.textContent = err.message;
+            }
+        });
+
+        // Lecture vocale
+        actionBtn.addEventListener('click', () => {
+            if (!texteALire) return;
+
+            const utterance = new SpeechSynthesisUtterance(texteALire);
+            utterance.lang = 'fr-FR';
+
+            speechSynthesis.cancel();
+            speechSynthesis.speak(utterance);
+        });
+    </script>
+</body>
+</html>

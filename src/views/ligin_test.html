@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion Paysan</title>
+</head>
+
+<body>
+    <h1>Connexion Paysan</h1>
+
+    <form id="loginForm">
+        <label>Nom : <input type="text" name="nom" required></label><br><br>
+        <label>Prénom : <input type="text" name="prenom" required></label><br><br>
+        <label>Mot de passe : <input type="password" name="mdp" required></label><br><br>
+        <button type="submit">Se connecter</button>
+    </form>
+
+    <div id="message"></div>
+
+    <script>
+        const form = document.getElementById('loginForm');
+        const messageDiv = document.getElementById('message');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Empêche le rechargement de la page
+
+            // Récupère les valeurs du formulaire
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('http://localhost:3000/login/loging', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    messageDiv.textContent = `Erreur : ${result.message}`;
+                } else {
+                    messageDiv.textContent =JSON.stringify(result);
+                }
+            } catch (err) {
+                messageDiv.textContent = 'Erreur serveur';
+                console.error(err);
+            }
+        });
+    </script>
+</body>
+
+</html>

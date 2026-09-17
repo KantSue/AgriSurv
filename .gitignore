@@ -1,0 +1,6 @@
+node_modules/
+.env
+*.log
+
+# Sauvegardes locales de la base : contiennent les mots de passe des paysans
+backup_*.sql

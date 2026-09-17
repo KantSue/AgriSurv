@@ -1,0 +1,32 @@
+      <!-- {/* NAV */} -->
+      <!-- {/* <div className="space-x-4">
+        <Link to="/culture/myVarieter">Ireo Voliko</Link>
+        <Link to="/Activiter/enCours">En cours</Link>
+        <Link to="/Activiter/Passer">Passées</Link>
+        <Link to="/Activiter/Future">À venir</Link>
+      </div>
+
+      {/* VARIÉTÉS */}
+      {/* <div>
+        <h1>Ireo Fambolena voasafinao</h1>
+        <ul>
+          {listVar.map((e) => (
+            <li
+              key={e.id_varieter}
+              onClick={() => setId(e.id_varieter)}
+              className="cursor-pointer text-green-700"
+            >
+              {e.nom_varieter}
+            </li>
+          ))}
+        </ul>
+      </div>  */}
+
+      {/* ACTIVITÉS */}
+      {/* {id_varieter && (
+        <>
+          <Section title="Activités en cours" data={enCours} />
+          <Section title="Activités passées" data={passer} />
+          <Section title="Activités à venir" data={aVenir} />
+        </> -->
+      <!-- )} */} -->
