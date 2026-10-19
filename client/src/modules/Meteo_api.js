@@ -14,6 +14,9 @@ const descriptionsMG = {
   "light rain":"orana manify",
   "moderate rain":"orana matevina"
 };
+// OpenWeather (units=metric) donne le vent en m/s.
+const toKmh = (ms) => Math.round(ms * 3.6);
+
 export const OpenWeatherApi = async () => {
   const token = getToken();
   const localisation = token?.user?.localisation ?? null;
@@ -33,10 +36,10 @@ export const OpenWeatherApi = async () => {
     const localDate = new Date((data.dt + data.timezone) * 1000);
     return {
       ville: data.name,
-      temp_min: data.main.temp_min,
-      temp_max: data.main.temp_max,
+      temp_min: Math.round(data.main.temp_min),
+      temp_max: Math.round(data.main.temp_max),
       humidite: data.main.humidity,
-      vent: data.wind.speed,
+      vent: toKmh(data.wind.speed),
       pluie: data.rain ? Object.values(data.rain)[0] : 0,
       icon: data.weather[0].icon,
       desc: descMg,
@@ -71,11 +74,11 @@ export const MeteoFuture =async()=>{
 
         return {
           date: localDate,
-          temp_min: item.main.temp_min,
-          temp_max: item.main.temp_max,
+          temp_min: Math.round(item.main.temp_min),
+          temp_max: Math.round(item.main.temp_max),
           desc: descMg,
           icon: `https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`,
-          vent: item.wind.speed,
+          vent: toKmh(item.wind.speed),
           humidite: item.main.humidity
         };
       });

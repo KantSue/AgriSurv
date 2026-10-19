@@ -70,6 +70,9 @@ CREATE TABLE `paysans` (
   `num_telephone` varchar(20) DEFAULT NULL,
   `localisation` varchar(100) DEFAULT NULL,
   `mot_de_passe` varchar(255) NOT NULL,
+  `role` enum('paysan','admin') NOT NULL DEFAULT 'paysan',
+  `date_inscription` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `derniere_connexion` datetime DEFAULT NULL,
   PRIMARY KEY (`id_paysan`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors()); 
 app.use(express.json());
@@ -29,6 +29,9 @@ app.use('/culture',Culture_router)
 
 const Activiter_router=require('./router/Activiter_router');
 app.use('/Activity',Activiter_router)
+
+const Admin_router=require('./router/Admin_router');
+app.use('/admin',Admin_router)
 
 
 app.use((err, req, res, next) => {

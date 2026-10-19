@@ -10,9 +10,8 @@ import { AuthCard, AuthField, PasswordInput, inputClass, submitClass } from "../
 // Comptes de comptes_demo.sql
 const DEMO_CODE = "123456";
 const DEMO_ACCOUNTS = [
-  { tel: "0340000001", nom: "Rakoto Demo", region: "Analamanga" },
-  { tel: "0340000002", nom: "Rasoa Demo", region: "Alaotra Mangoro" },
-  { tel: "0340000003", nom: "Randria Demo", region: "Sava" },
+  { tel: "0340000000", nom: "Admin", region: "Mpitantana" },
+  { tel: "0340000001", nom: "Rakoto", region: "Tantsaha, Analamanga" },
 ];
 
 export function LogIn() {

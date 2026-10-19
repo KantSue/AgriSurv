@@ -12,13 +12,15 @@ Les calendriers du riz viennent du livre *Tetiandrom-pambolena Vary 2025-2026* (
 - **Torohevitra (conseils)** : fiches pratiques par thème (semis, engrais, mauvaises herbes…).
 - **Toetrandro (météo)** : prévisions de la région via OpenWeather, avec les risques (pluie, vent).
 - **Fampitandremana (alertes)** et **observations** du paysan.
+- **Espace admin** : modifier les calendriers (activités et dates par variété), gérer les torohevitra, voir les statistiques d'utilisation (inscrits, actifs, régions, variétés suivies).
 
 ## Comptes de démonstration
 
-Le code est `123456` pour les trois comptes.
+Le code est `123456` pour tous les comptes. Sur la page de connexion, un clic sur un compte de démonstration remplit le formulaire.
 
-| Téléphone | Paysan | Région | Ce qu'on voit |
+| Téléphone | Compte | Région | Ce qu'on voit |
 |---|---|---|---|
+| `0340000000` | Admin | — | Espace admin : statistiques, calendriers, torohevitra |
 | `0340000001` | Rakoto Demo | Analamanga | Calendrier du riz an-drano Madikatra |
 | `0340000002` | Rasoa Demo | Alaotra Mangoro | Calendrier MKX, Mihary (zone Alaotra) |
 | `0340000003` | Randria Demo | Sava | Pas encore de variété : montre l'écran de choix |
@@ -48,6 +50,13 @@ mysql -u root --default-character-set=utf8mb4 tantsaha_co2 < comptes_demo.sql
 Avec phpMyAdmin : créer la base `tantsaha_co2`, puis importer les deux fichiers dans cet ordre.
 
 La connexion se configure dans [src/config/db.js](src/config/db.js) (par défaut `root` sans mot de passe, port 3306).
+
+Pour une base installée avant l'espace admin, ajouter d'abord le rôle et les dates d'inscription, puis réimporter les comptes démo :
+
+```sh
+mysql -u root --default-character-set=utf8mb4 tantsaha_co2 < maj_admin.sql
+mysql -u root --default-character-set=utf8mb4 tantsaha_co2 < comptes_demo.sql
+```
 
 ### 2. Backend (port 3000)
 
@@ -84,7 +93,8 @@ L'application s'ouvre sur http://localhost:3001.
 │       ├── modules/         appels à l'API
 │       └── hooks_login/     hooks (formulaires, chargement des données)
 ├── tantsaha_co2.sql         structure de la base + données de référence
-├── comptes_demo.sql         comptes de démonstration
+├── comptes_demo.sql         comptes de démonstration (admin + paysans)
+├── maj_admin.sql            ajoute le rôle admin sur une base existante
 └── maj_fofifa_riz_2025_2026.sql   mise à jour des calendriers FOFIFA sur une base existante
 ```
 
@@ -100,6 +110,11 @@ L'application s'ouvre sur http://localhost:3001.
 | `POST /culture/insert` | Enregistre la variété choisie par le paysan |
 | `GET /Activity/gestionPlaning/:id_paysan/:id_varieter` | Activités passées, en cours et à venir |
 | `GET /conseil/allType`, `GET /conseil/bytype/:type` | Conseils |
+| `GET /admin/stats` | Statistiques d'utilisation (admin) |
+| `GET/POST/PUT/DELETE /admin/planning…` | Calendriers par variété (admin) |
+| `GET/POST/PUT/DELETE /admin/conseils…` | Torohevitra (admin) |
+
+Les routes `/admin` demandent un token d'un compte dont le `role` est `admin`.
 
 ## Mettre à jour une base existante
 

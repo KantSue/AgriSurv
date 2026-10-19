@@ -55,6 +55,14 @@ class Login_model {
     return result;
   }
 
+  // Sert aux statistiques admin (paysans actifs).
+  static async markConnexion(id_paysan) {
+    await db.query("UPDATE paysans SET derniere_connexion=NOW() WHERE id_paysan=?", {
+      replacements: [id_paysan],
+      type: QueryTypes.UPDATE,
+    });
+  }
+
  static async verifyMdp(mdp, hashedMdp) {
   const match = await bcrypt.compare(mdp, hashedMdp);
   console.log(match ? "Mot de passe correct !" : "Mot de passe incorrect !");

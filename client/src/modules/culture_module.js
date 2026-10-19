@@ -1,4 +1,4 @@
-import { getToken } from "./auth";
+import { getToken, isAdmin } from "./auth";
 export const allCulture = async () => {
    const tokenData = getToken();
 const localisation = tokenData?.user?.localisation;
@@ -112,8 +112,9 @@ export const cultureOfP = async () => {
         return { success: false, message: "Erreur dans IsAlredyExistInPratiquer" };
     }
  }
-// Après connexion : l'accueil si le paysan a déjà une variété, sinon le choix de variété.
+// Après connexion : l'espace admin, l'accueil si le paysan a déjà une variété, sinon le choix de variété.
 export const routeAfterLogin = async () => {
+  if (isAdmin()) return "/admin";
   const response = await IsAlredyExistInPratiquer();
   return response.success && response.result.length > 0 ? "/Acceuil" : "/Culture/choice";
 };

@@ -30,3 +30,5 @@ export const removeToken = () => {
 export const isAuthenticated = () => {
   return !!getToken();
 };
+
+export const isAdmin = () => getToken()?.user?.role === "admin";

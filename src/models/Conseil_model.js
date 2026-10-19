@@ -46,7 +46,8 @@ class Conseil_model {
   }
   static async readAllType() {
     const result = await db.query(
-      "SELECT type_conseil,pictogramme FROM conseil GROUP BY type_conseil",
+      // MAX : garde l'image d'un conseil du thème même si un conseil ajouté par l'admin n'en a pas.
+      "SELECT type_conseil,MAX(pictogramme) AS pictogramme FROM conseil GROUP BY type_conseil",
       {
         type: QueryTypes.SELECT,
       }

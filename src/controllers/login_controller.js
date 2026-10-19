@@ -1,10 +1,6 @@
 const Login_model = require("../models/login_model");
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
-
-const SECRET_KEY = "maCleSuperSecrete123!"
-// Les paysans restent connectés un mois pour ne pas refaire la connexion à chaque ouverture.
-const SESSION_DURATION = "30d"
+const { JWT_SECRET: SECRET_KEY, SESSION_DURATION } = require("../config/jwt");
 
 class Login_controller {
   static async signup(req, res) {
@@ -23,7 +19,8 @@ class Login_controller {
       const token = jwt.sign(
         { id: paysan.id_paysan,
            nom: paysan.nom,
-           localisation:paysan.localisation },
+           localisation:paysan.localisation,
+           role: "paysan" },
         SECRET_KEY,
         { expiresIn: SESSION_DURATION }
       );
@@ -45,12 +42,14 @@ class Login_controller {
       const mdpValidation = await Login_model.verifyMdp(mdpsansespace, u.mot_de_passe);
       if (!mdpValidation)
         return res.status(400).json({ message: "kaody midafina diso" });
- 
+
+      await Login_model.markConnexion(u.id_paysan);
       const token = jwt.sign(
         {
           id: u.id_paysan,
           nom: u.nom_paysan,
-          localisation:u.localisation
+          localisation:u.localisation,
+          role: u.role || "paysan"
         },
         SECRET_KEY,
         { expiresIn: SESSION_DURATION }
