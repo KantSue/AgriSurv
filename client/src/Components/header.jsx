@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getToken } from "../modules/auth";
+import { getToken, removeToken } from "../modules/auth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse, faCalendar, faCloudSun, faLightbulb ,faArrowRightFromBracket} from "@fortawesome/free-solid-svg-icons";
 import { NavLink } from "react-router-dom";
@@ -34,7 +34,7 @@ export default function BarNav() {
            {/* logo */}
           <div className="flex  flex-row-reverse  items-center justify-center gap-2 ">
             <a href="/" className="text-1xl font-bold text-green-100">
-              Tantsaha Connect
+              AgriSurv
             </a>
             <img
               src="/images/logo.png"
@@ -63,8 +63,7 @@ export default function BarNav() {
   ))}
 
   <h1 className="flex items-center gap-2 mt-32 ml-10 justify-center text-green-100 cursor-pointer hover:text-red-500"  onClick={() => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    removeToken();
     window.location.href = "/login";
   }}>
     Hiala <FontAwesomeIcon icon={faArrowRightFromBracket} className="w-5 h-5" />
