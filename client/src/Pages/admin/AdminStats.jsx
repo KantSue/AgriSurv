@@ -1,27 +1,15 @@
+import {
+  faUserPlus,
+  faSeedling,
+  faNoteSticky,
+  faMapLocationDot,
+} from "@fortawesome/free-solid-svg-icons";
 import { useReadAll } from "../../hooks_login/readAll";
 import { getStats } from "../../modules/Admin_api";
-import { AdminTitle } from "../../Components/AdminLayout";
+import { Card, StatTile, HeroBanner, GlassStat } from "../../Components/AppShell";
 
-const BAR = "#03624C";
-
-function StatTile({ label, value, hint }) {
-  return (
-    <div className="bg-white rounded-xl border border-gray-200 p-4">
-      <p className="text-sm text-gray-600">{label}</p>
-      <p className="text-3xl font-bold text-[#0B2B26] mt-1 tabular-nums">{value}</p>
-      {hint && <p className="text-xs text-gray-500 mt-1">{hint}</p>}
-    </div>
-  );
-}
-
-function Card({ title, children }) {
-  return (
-    <section className="bg-white rounded-xl border border-gray-200 p-5">
-      <h2 className="font-semibold text-[#0B2B26] mb-4">{title}</h2>
-      {children}
-    </section>
-  );
-}
+// Une seule série par graphique : une seule teinte, celle de la marque.
+const BAR = "#235347";
 
 // Barres horizontales triées, valeur écrite au bout de chaque barre.
 function BarList({ rows, unit }) {
@@ -33,10 +21,10 @@ function BarList({ rows, unit }) {
         <li key={r.label} title={`${r.label} : ${r.total} ${unit}`}>
           <p className="text-sm text-gray-700 truncate">{r.label}</p>
           <div className="flex items-center gap-2 mt-1">
-            <div className="flex-1 h-3">
+            <div className="flex-1 h-2.5 rounded-full bg-agri-50">
               <div
-                className="h-3 rounded-r"
-                style={{ width: `${Math.max((r.total / max) * 100, 2)}%`, background: BAR }}
+                className="h-2.5 rounded-full"
+                style={{ width: `${Math.max((r.total / max) * 100, 3)}%`, background: BAR }}
               />
             </div>
             <span className="w-8 text-right text-sm font-semibold tabular-nums text-gray-900">{r.total}</span>
@@ -54,34 +42,54 @@ function lastSixMonths(parMois) {
   return Array.from({ length: 6 }, (_, i) => {
     const d = new Date(now.getFullYear(), now.getMonth() - 5 + i, 1);
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-    return {
-      key,
-      label: d.toLocaleDateString("fr-FR", { month: "short" }),
-      total: totals[key] || 0,
-    };
+    return { key, label: d.toLocaleDateString("fr-FR", { month: "short" }), total: totals[key] || 0 };
   });
 }
 
-function MonthColumns({ parMois }) {
+// Tiges fines avec un point au sommet ; le mois le plus haut porte son chiffre.
+function MonthLollipops({ parMois }) {
   const months = lastSixMonths(parMois);
   const max = Math.max(1, ...months.map((m) => m.total));
+  const peak = months.reduce((a, b) => (b.total > a.total ? b : a), months[0]);
   return (
-    <div className="flex items-end gap-2 h-44 border-b border-gray-200">
-      {months.map((m) => (
-        <div
-          key={m.key}
-          className="flex-1 flex flex-col items-center justify-end h-full"
-          title={`${m.label} : ${m.total} inscription(s)`}
-        >
-          <span className="text-xs font-semibold tabular-nums text-gray-900 mb-1">{m.total}</span>
-          <div
-            className="w-full max-w-10 rounded-t"
-            style={{ height: `${(m.total / max) * 75}%`, minHeight: m.total ? 4 : 0, background: BAR }}
-          />
-        </div>
-      ))}
-      <div className="sr-only">
-        {months.map((m) => `${m.label} ${m.total}`).join(", ")}
+    <div>
+      <div className="flex items-end h-52 gap-2">
+        {months.map((m) => {
+          const h = (m.total / max) * 80;
+          const isPeak = m.key === peak.key && m.total > 0;
+          return (
+            <div
+              key={m.key}
+              className="group relative flex-1 flex flex-col items-center justify-end h-full"
+              title={`${m.label} : ${m.total} inscription(s)`}
+            >
+              <div className="absolute inset-y-0 w-0.5 rounded-full bg-agri-50" />
+              <span
+                className={`relative mb-2 rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums ${
+                  isPeak ? "bg-agri-900 text-white" : "text-gray-700 opacity-0 group-hover:opacity-100"
+                }`}
+              >
+                {m.total}
+              </span>
+              <div className="relative flex flex-col items-center" style={{ height: `${h}%` }}>
+                <span className="w-3.5 h-3.5 rounded-full border-2 border-white shadow" style={{ background: BAR }} />
+                <span className="flex-1 w-0.5" style={{ background: BAR }} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="flex gap-2 mt-2">
+        {months.map((m) => (
+          <span
+            key={m.key}
+            className={`flex-1 text-center text-xs ${
+              m.key === peak.key && m.total > 0 ? "font-semibold text-agri-900" : "text-gray-500"
+            }`}
+          >
+            {m.label}
+          </span>
+        ))}
       </div>
     </div>
   );
@@ -100,38 +108,48 @@ export function AdminStats() {
   const pct = (n) => (totaux.paysans ? Math.round((n / totaux.paysans) * 100) : 0);
 
   return (
-    <>
-      <AdminTitle title="Statistiques" subtitle="Utilisation de l'application par les paysans" />
+    <div className="space-y-4">
+      <HeroBanner
+        eyebrow="Administration"
+        title={
+          <>
+            Suivi des paysans
+            <br />
+            AgriSurv
+          </>
+        }
+        subtitle="Utilisation de l'application et calendriers FOFIFA"
+      >
+        <GlassStat label="Paysans inscrits" value={totaux.paysans} />
+        <GlassStat label="Actifs sur 30 jours" value={totaux.actifs_30j}>
+          <div className="mt-2 h-1.5 w-full rounded-full bg-white/25">
+            <div className="h-1.5 rounded-full bg-agri-100" style={{ width: `${pct(totaux.actifs_30j)}%` }} />
+          </div>
+          <p className="mt-1 text-xs text-agri-100">{pct(totaux.actifs_30j)} % des inscrits</p>
+        </GlassStat>
+      </HeroBanner>
 
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-6">
-        <StatTile label="Paysans inscrits" value={totaux.paysans} />
-        <StatTile label="Nouveaux (30 j)" value={totaux.nouveaux_30j} />
-        <StatTile label="Actifs (30 j)" value={totaux.actifs_30j} hint={`${pct(totaux.actifs_30j)} % des inscrits`} />
-        <StatTile label="Sans variété" value={totaux.sans_variete} hint="n'ont pas fini l'inscription" />
-        <StatTile label="Observations" value={totaux.observations} />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatTile icon={faUserPlus} value={totaux.nouveaux_30j} label="Nouveaux (30 j)" />
+        <StatTile icon={faSeedling} value={totaux.sans_variete} label="Sans variété" hint="inscription inachevée" />
+        <StatTile icon={faNoteSticky} value={totaux.observations} label="Observations" />
+        <StatTile icon={faMapLocationDot} value={parRegion.length} label="Régions représentées" />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2 mb-4">
+      <div className="grid gap-4 lg:grid-cols-3">
+        <Card title="Inscriptions sur 6 mois" className="lg:col-span-2">
+          <MonthLollipops parMois={parMois} />
+        </Card>
         <Card title="Paysans par région">
           <BarList rows={parRegion} unit="paysan(s)" />
         </Card>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-3">
         <Card title="Variétés les plus suivies">
           <BarList rows={parVariete} unit="paysan(s)" />
         </Card>
-      </div>
-
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Card title="Inscriptions sur 6 mois">
-          <MonthColumns parMois={parMois} />
-          <div className="flex gap-2 mt-1">
-            {lastSixMonths(parMois).map((m) => (
-              <span key={m.key} className="flex-1 text-center text-xs text-gray-500">
-                {m.label}
-              </span>
-            ))}
-          </div>
-        </Card>
-        <Card title="Dernières inscriptions">
+        <Card title="Dernières inscriptions" className="lg:col-span-2">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -159,6 +177,6 @@ export function AdminStats() {
           </div>
         </Card>
       </div>
-    </>
+    </div>
   );
 }

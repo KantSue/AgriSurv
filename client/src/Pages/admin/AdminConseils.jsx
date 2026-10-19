@@ -151,11 +151,11 @@ export function AdminConseils() {
               />
             </li>
           ) : (
-            <li key={c.id_conseil} className="bg-white rounded-xl border border-gray-200 p-4">
+            <li key={c.id_conseil} className="bg-white rounded-3xl shadow-sm p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">{c.type_conseil}</p>
-                  <h2 className="font-semibold text-[#0B2B26]">{c.titre}</h2>
+                  <h2 className="font-semibold text-agri-900">{c.titre}</h2>
                 </div>
                 <div className="flex gap-2">
                   <button type="button" onClick={() => setEditing(c.id_conseil)} className={adminGhostButton}>

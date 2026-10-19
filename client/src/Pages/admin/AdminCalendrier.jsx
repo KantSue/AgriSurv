@@ -141,7 +141,7 @@ export function AdminCalendrier() {
         subtitle="Les paysans voient ces dates dans leur Alimanaka dès l'enregistrement."
       />
 
-      <div className="grid gap-3 sm:grid-cols-2 bg-white rounded-xl border border-gray-200 p-4 mb-5">
+      <div className="grid gap-3 sm:grid-cols-2 bg-white rounded-3xl shadow-sm p-4 mb-5">
         <label className="block">
           <span className="text-sm text-gray-600">Région</span>
           <select
@@ -180,9 +180,9 @@ export function AdminCalendrier() {
         <>
           <form
             onSubmit={handleAdd}
-            className="grid gap-3 md:grid-cols-[2fr_1fr_1fr_auto] items-end bg-white rounded-xl border border-gray-200 p-4 mb-5"
+            className="grid gap-3 md:grid-cols-[2fr_1fr_1fr_auto] items-end bg-white rounded-3xl shadow-sm p-4 mb-5"
           >
-            <p className="md:col-span-4 font-semibold text-[#0B2B26]">Ajouter une activité</p>
+            <p className="md:col-span-4 font-semibold text-agri-900">Ajouter une activité</p>
             <RowFields row={newRow} setRow={setNewRow} activites={activites} />
             <button type="submit" disabled={!canAdd} className={adminButton}>
               <FontAwesomeIcon icon={faPlus} />
@@ -190,7 +190,7 @@ export function AdminCalendrier() {
             </button>
           </form>
 
-          <div className="bg-white rounded-xl border border-gray-200 overflow-x-auto">
+          <div className="bg-white rounded-3xl shadow-sm overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-gray-500 border-b bg-gray-50">

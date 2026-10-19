@@ -20,7 +20,7 @@ export function ConseilPage() {
             <li key={type.type_conseil}>
               <Link
                 to={`/Conseil/Type/${encodeURIComponent(type.type_conseil)}`}
-                className="block bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                className="block bg-white rounded-3xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
               >
                 {type.pictogramme ? (
                   <img src={type.pictogramme} alt="" className="w-full h-28 md:h-36 object-cover" />
@@ -29,7 +29,7 @@ export function ConseilPage() {
                     <FontAwesomeIcon icon={faLightbulb} className="text-4xl text-amber-400" />
                   </div>
                 )}
-                <p className="p-3 text-center text-lg font-semibold text-[#03624C]">{type.type_conseil}</p>
+                <p className="p-3 text-center text-lg font-semibold text-agri-600">{type.type_conseil}</p>
               </Link>
             </li>
           ))}
@@ -54,13 +54,13 @@ export function GetTitle() {
             <li key={t.id_conseil}>
               <Link
                 to={`/Conseil/Type/Titre/${encodeURIComponent(t.titre)}`}
-                className="flex items-center justify-between gap-3 bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-shadow"
+                className="flex items-center justify-between gap-3 bg-white rounded-2xl shadow-sm p-4 hover:shadow-md transition-shadow"
               >
                 <div>
-                  <h2 className="text-lg font-semibold text-[#0B2B26]">{t.titre}</h2>
+                  <h2 className="text-lg font-semibold text-agri-900">{t.titre}</h2>
                   <p className="text-gray-600 line-clamp-2">{t.contenu}</p>
                 </div>
-                <FontAwesomeIcon icon={faChevronRight} className="text-[#03624C]" />
+                <FontAwesomeIcon icon={faChevronRight} className="text-agri-600" />
               </Link>
             </li>
           ))}
@@ -102,7 +102,7 @@ export function GetAllByTitle() {
               <button
                 type="button"
                 onClick={() => speakMg(conseil.contenu)}
-                className="flex items-center gap-2 bg-[#03624C] text-white text-lg px-5 py-3 rounded-xl shadow hover:bg-green-800"
+                className="flex items-center gap-2 bg-agri-600 text-white text-lg px-5 py-3 rounded-xl shadow hover:bg-green-800"
               >
                 <FontAwesomeIcon icon={faVolumeHigh} />
                 Hihaino
@@ -110,7 +110,7 @@ export function GetAllByTitle() {
               <button
                 type="button"
                 onClick={stopSpeaking}
-                className="flex items-center gap-2 bg-white border-2 border-[#03624C] text-[#03624C] text-lg px-5 py-3 rounded-xl"
+                className="flex items-center gap-2 bg-white border-2 border-agri-600 text-agri-600 text-lg px-5 py-3 rounded-xl"
               >
                 <FontAwesomeIcon icon={faStop} />
                 Hijanona

@@ -46,15 +46,15 @@ export function ActivityCard({ activity }) {
   const style = STATUS_STYLE[activity.status];
   const timing = timingText(activity);
   return (
-    <li className={`bg-white rounded-xl shadow-sm border-l-4 ${style.border} p-4`}>
+    <li className={`bg-white rounded-2xl shadow-sm border-l-4 ${style.border} p-4`}>
       <div className="flex items-start justify-between gap-3">
-        <h3 className="text-lg font-semibold text-[#0B2B26]">{activity.type_activite?.trim()}</h3>
+        <h3 className="text-lg font-semibold text-agri-900">{activity.type_activite?.trim()}</h3>
         <span className={`shrink-0 text-xs font-semibold px-2.5 py-1 rounded-full ${style.badge}`}>
           {style.label}
         </span>
       </div>
       <p className="mt-1 text-gray-700">{formatRangeMg(activity.date_debut, activity.date_fin)}</p>
-      {timing && <p className="mt-1 text-sm font-medium text-[#03624C]">{timing}</p>}
+      {timing && <p className="mt-1 text-sm font-medium text-agri-600">{timing}</p>}
     </li>
   );
 }
@@ -74,7 +74,7 @@ export function ActiviterPages() {
       {varietes.length === 0 ? (
         <EmptyState>
           Mbola tsy nisafidy karazana ianao.{" "}
-          <Link to="/Culture/choice" className="text-[#03624C] font-semibold underline">
+          <Link to="/Culture/choice" className="text-agri-600 font-semibold underline">
             Hisafidy izao
           </Link>
         </EmptyState>
@@ -87,8 +87,8 @@ export function ActiviterPages() {
                   key={v.id_varieter}
                   type="button"
                   onClick={() => setIdVarieter(v.id_varieter)}
-                  className={`shrink-0 px-4 py-2 rounded-full border-2 border-[#03624C] font-medium ${
-                    v.id_varieter === idVarieter ? "bg-[#03624C] text-white" : "bg-white text-[#03624C]"
+                  className={`shrink-0 px-4 py-2 rounded-full border-2 border-agri-600 font-medium ${
+                    v.id_varieter === idVarieter ? "bg-agri-600 text-white" : "bg-white text-agri-600"
                   }`}
                 >
                   {v.nom_varieter}
@@ -98,7 +98,7 @@ export function ActiviterPages() {
           ) : (
             current && (
               <p className="mb-4 text-gray-700">
-                Karazana: <span className="font-semibold text-[#03624C]">{current.nom_varieter}</span>
+                Karazana: <span className="font-semibold text-agri-600">{current.nom_varieter}</span>
               </p>
             )
           )}
@@ -113,13 +113,13 @@ export function ActiviterPages() {
                   role="tab"
                   aria-selected={active}
                   onClick={() => setTab(t.key)}
-                  className={`flex flex-col items-center gap-1 rounded-xl py-3 px-1 transition-colors ${
-                    active ? "bg-[#03624C] text-white shadow-md" : "bg-white text-[#03624C] shadow-sm"
+                  className={`flex flex-col items-center gap-1 rounded-2xl py-3 px-1 transition-colors ${
+                    active ? "bg-agri-900 text-white shadow-md" : "bg-white text-agri-700 shadow-sm"
                   }`}
                 >
                   <FontAwesomeIcon icon={t.icon} className="text-lg" />
                   <span className="font-semibold">{t.label}</span>
-                  <span className={`text-xs ${active ? "text-green-100" : "text-gray-500"}`}>
+                  <span className={`text-xs ${active ? "text-agri-100" : "text-gray-500"}`}>
                     {loading ? "…" : `${byStatus(t.key).length} lahasa`}
                   </span>
                 </button>

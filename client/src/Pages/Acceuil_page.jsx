@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBell,
-  faCalendarDays,
-  faLightbulb,
   faTriangleExclamation,
   faPersonDigging,
+  faHourglassHalf,
+  faCircleCheck,
+  faCloudRain,
   faChevronRight,
+  faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { useFetch } from "../hooks_login/fetchApi";
 import { useReadAll } from "../hooks_login/readAll";
@@ -17,6 +19,7 @@ import { allTypeConseilApi, allTitleConseil } from "../modules/Conseil_api";
 import { getToken } from "../modules/auth";
 import { formatMg } from "../modules/dates";
 import { Page, EmptyState } from "../Components/FarmerLayout";
+import { Card, StatTile, HeroBanner, GlassStat } from "../Components/AppShell";
 import { ActivityCard, useMyVariety } from "./Avtiviter_page";
 
 // Seuils au-delà desquels on prévient le paysan.
@@ -35,101 +38,110 @@ export function AcceuilPage() {
   const { data: meteo } = useFetch(OpenWeatherApi);
   const warning = weatherWarning(meteo);
 
+  const { varietes, idVarieter } = useMyVariety();
+  const { activities, loading } = usePlanning(idVarieter);
+  const count = (status) => (loading ? "…" : activities.filter((a) => a.status === status).length);
+  const variete = varietes.find((v) => v.id_varieter === idVarieter);
+
   return (
-    <>
-    {/* Bannière d'accueil */}
-    <section className="max-w-5xl mx-auto md:px-8 md:pt-6">
-      <img
-        src="/images/hero.png"
-        alt="Tanimbary"
-        className="w-full h-48 md:h-72 object-cover rounded-b-2xl md:rounded-2xl shadow-md"
-      />
-    </section>
-    <Page title={`Manao ahoana, ${nom || ""}!`} subtitle={`Anio ${formatMg(new Date())}`}>
-      <section className="mb-6">
-        <h2 className="flex items-center gap-2 text-xl font-bold text-red-700 mb-3">
-          <FontAwesomeIcon icon={faBell} />
-          Fanairana
-        </h2>
-        {warning ? (
-          <div className="flex items-center gap-3 bg-red-50 border border-red-200 text-red-800 rounded-2xl p-4 shadow-sm">
-            <FontAwesomeIcon icon={faTriangleExclamation} className="text-xl" />
-            <p className="font-medium">Toetr'andro: {warning}</p>
-          </div>
-        ) : (
-          <EmptyState>Tsy misy fanairana anio.</EmptyState>
-        )}
-      </section>
-
-      <section className="mb-6">
-        <h2 className="flex items-center gap-2 text-xl font-bold text-[#0B2B26] mb-3">
-          <FontAwesomeIcon icon={faPersonDigging} className="text-[#03624C]" />
-          Lahasa anio
-        </h2>
-        <TodayTasks />
-      </section>
-
-      <section className="grid grid-cols-2 gap-3 mb-6">
-        <Link
-          to="/Activiter"
-          className="flex flex-col justify-between gap-4 bg-gradient-to-r from-green-700 to-green-600 text-green-100 rounded-2xl p-4 shadow-xl min-h-28 hover:-translate-y-1 transition-transform duration-300"
+    <Page>
+      <div className="space-y-4">
+        <HeroBanner
+          eyebrow={`Anio ${formatMg(new Date())}`}
+          title={`Manao ahoana, ${nom || ""}!`}
+          subtitle={variete ? `Karazana: ${variete.nom_varieter}` : "Tongasoa eto amin'ny AgriSurv"}
+          action={
+            <a
+              href="#fanairana"
+              title="Fanairana"
+              className="relative flex items-center justify-center w-11 h-11 shrink-0 rounded-full bg-white text-agri-900 shadow"
+            >
+              <FontAwesomeIcon icon={faBell} />
+              {warning && <span className="absolute top-2 right-2.5 w-2.5 h-2.5 rounded-full bg-red-500" />}
+            </a>
+          }
         >
-          <FontAwesomeIcon icon={faCalendarDays} className="text-3xl" />
-          <span className="text-lg font-semibold">Alimanaka</span>
-        </Link>
-        <Link
-          to="/Meteo"
-          className="flex flex-col justify-between gap-2 bg-blue-400 text-white rounded-2xl p-4 shadow-xl min-h-28 hover:shadow-2xl transition-shadow duration-300"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-3xl font-bold">
-              {meteo?.temp_max !== undefined ? `${meteo.temp_max}°` : "--"}
-            </span>
-            {meteo?.icon && (
-              <img
-                src={`https://openweathermap.org/img/wn/${meteo.icon}@2x.png`}
-                alt={meteo.desc}
-                className="w-14 h-14 -my-2"
-              />
-            )}
-          </div>
-          <span className="text-lg font-semibold">Toetrandro</span>
-        </Link>
-      </section>
+          <Link to="/Activiter">
+            <GlassStat label="Lahasa anio" value={count("enCours")}>
+              <p className="mt-1 flex items-center gap-1 text-xs text-agri-100">
+                Alimanaka <FontAwesomeIcon icon={faArrowRight} />
+              </p>
+            </GlassStat>
+          </Link>
+          <Link to="/Meteo">
+            <GlassStat
+              label="Toetrandro"
+              value={meteo?.temp_max !== undefined ? `${meteo.temp_max}°C` : "--"}
+            >
+              <p className="mt-1 text-xs capitalize text-agri-100">{meteo?.desc || "…"}</p>
+            </GlassStat>
+          </Link>
+        </HeroBanner>
 
-      <section>
-        <h2 className="flex items-center gap-2 text-xl font-bold text-[#0B2B26] mb-3">
-          <FontAwesomeIcon icon={faLightbulb} className="text-amber-500" />
-          Torohevitra
-        </h2>
-        <TipOfTheDay />
-      </section>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatTile icon={faPersonDigging} value={count("enCours")} label="Ankehitriny" />
+          <StatTile icon={faHourglassHalf} value={count("aVenir")} label="Ho avy" />
+          <StatTile icon={faCircleCheck} value={count("passer")} label="Vita" />
+          <StatTile
+            icon={faCloudRain}
+            value={meteo?.pluie !== undefined ? `${meteo.pluie} mm` : "--"}
+            label="Orana anio"
+          />
+        </div>
+
+        <div className="grid gap-4 lg:grid-cols-3">
+          <Card
+            title="Lahasa anio"
+            className="lg:col-span-2"
+            action={
+              <Link to="/Activiter" className="text-sm font-medium text-agri-600 rounded-full border border-agri-100 px-3 py-1">
+                Alimanaka <FontAwesomeIcon icon={faChevronRight} className="text-xs" />
+              </Link>
+            }
+          >
+            <TodayTasks varietes={varietes} activities={activities} loading={loading} />
+          </Card>
+
+          <div className="space-y-4">
+            <Card title={<span id="fanairana" className="text-red-700"><FontAwesomeIcon icon={faBell} /> Fanairana</span>}>
+              {warning ? (
+                <p className="flex items-center gap-3 rounded-2xl bg-red-50 p-3 font-medium text-red-800">
+                  <FontAwesomeIcon icon={faTriangleExclamation} className="text-xl" />
+                  Toetr'andro: {warning}
+                </p>
+              ) : (
+                <p className="text-gray-600">Tsy misy fanairana anio.</p>
+              )}
+            </Card>
+            <Card title="Torohevitra">
+              <TipOfTheDay />
+            </Card>
+          </div>
+        </div>
+      </div>
     </Page>
-    </>
   );
 }
 
-function TodayTasks() {
-  const { varietes, idVarieter } = useMyVariety();
-  const { activities, loading } = usePlanning(idVarieter);
+function TodayTasks({ varietes, activities, loading }) {
   const today = activities.filter((a) => a.status === "enCours");
 
   if (varietes.length === 0) {
     return (
       <EmptyState>
         Mbola tsy nisafidy karazana ianao.{" "}
-        <Link to="/Culture/choice" className="text-[#03624C] font-semibold underline">
+        <Link to="/Culture/choice" className="text-agri-600 font-semibold underline">
           Hisafidy izao
         </Link>
       </EmptyState>
     );
   }
-  if (loading) return <EmptyState>Andraso kely…</EmptyState>;
+  if (loading) return <p className="text-gray-600">Andraso kely…</p>;
   if (today.length === 0) {
     const next = activities.find((a) => a.status === "aVenir");
     return (
       <div className="space-y-3">
-        <EmptyState>Tsy misy lahasa atao anio.</EmptyState>
+        <p className="text-gray-600">Tsy misy lahasa atao anio.</p>
         {next && (
           <>
             <p className="text-sm font-medium text-gray-600">Lahasa manaraka:</p>
@@ -154,24 +166,24 @@ function TodayTasks() {
 function TipOfTheDay() {
   const day = Math.floor(Date.now() / 86400000);
   const { data: types = [] } = useReadAll(allTypeConseilApi);
-  const type = types.length > 0 ? types[day % types.length].type_conseil : null;
+  const type = types.length > 0 ? types[day % types.length] : null;
   const loadTips = useCallback(
-    () => (type ? allTitleConseil(type) : Promise.resolve({ success: true, result: [] })),
+    () => (type ? allTitleConseil(type.type_conseil) : Promise.resolve({ success: true, result: [] })),
     [type]
   );
   const { data: tips = [] } = useReadAll(loadTips);
   const tip = tips.length > 0 ? tips[day % tips.length] : null;
 
-  if (!tip) return <EmptyState>Andraso kely…</EmptyState>;
+  if (!tip) return <p className="text-gray-600">Andraso kely…</p>;
   return (
-    <Link
-      to={`/Conseil/Type/Titre/${encodeURIComponent(tip.titre)}`}
-      className="block bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-shadow"
-    >
+    <Link to={`/Conseil/Type/Titre/${encodeURIComponent(tip.titre)}`} className="block group">
+      {type.pictogramme && (
+        <img src={type.pictogramme} alt="" className="w-full h-28 object-cover rounded-2xl mb-3" />
+      )}
       <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">{tip.type_conseil}</p>
-      <h3 className="mt-1 text-lg font-semibold text-[#0B2B26]">{tip.titre}</h3>
-      <p className="mt-1 text-gray-700 line-clamp-3">{tip.contenu}</p>
-      <span className="mt-2 inline-flex items-center gap-1 text-[#03624C] font-medium">
+      <h3 className="mt-1 font-semibold text-agri-900">{tip.titre}</h3>
+      <p className="mt-1 text-sm text-gray-700 line-clamp-3">{tip.contenu}</p>
+      <span className="mt-2 inline-flex items-center gap-1 text-agri-600 font-medium group-hover:underline">
         Hamaky bebe kokoa <FontAwesomeIcon icon={faChevronRight} className="text-xs" />
       </span>
     </Link>
