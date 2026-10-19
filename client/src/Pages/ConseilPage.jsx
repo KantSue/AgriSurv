@@ -77,8 +77,15 @@ export function GetAllByTitle() {
   const conseil = conseils[0];
 
   return (
+    // Fond d'origine de l'écran conseil : image des rizières assombrie.
+    <div
+      className="relative min-h-screen bg-cover bg-center bg-fixed"
+      style={{ backgroundImage: "url('/images/hero.png')" }}
+    >
+      <div className="absolute inset-0 bg-black/40" />
     <Page
       title={title}
+      tone="dark"
       back={conseil ? `/Conseil/Type/${encodeURIComponent(conseil.type_conseil)}` : "/Conseil/Type"}
     >
       {err ? (
@@ -86,10 +93,7 @@ export function GetAllByTitle() {
       ) : !conseil ? (
         <EmptyState>Andraso kely…</EmptyState>
       ) : (
-        <article className="bg-white rounded-2xl shadow-sm overflow-hidden">
-          {conseil.pictogramme && (
-            <img src={conseil.pictogramme} alt="" className="w-full h-44 md:h-64 object-cover" />
-          )}
+        <article className="bg-gray-100 rounded-2xl shadow-2xl overflow-hidden">
           <div className="p-5 md:p-8">
             <p className="text-sm font-semibold uppercase tracking-wide text-amber-700">
               {conseil.type_conseil}
@@ -117,5 +121,6 @@ export function GetAllByTitle() {
         </article>
       )}
     </Page>
+    </div>
   );
 }

@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faBell,
   faCalendarDays,
   faLightbulb,
   faTriangleExclamation,
@@ -35,13 +36,30 @@ export function AcceuilPage() {
   const warning = weatherWarning(meteo);
 
   return (
+    <>
+    {/* Bannière d'accueil */}
+    <section className="max-w-5xl mx-auto md:px-8 md:pt-6">
+      <img
+        src="/images/hero.png"
+        alt="Tanimbary"
+        className="w-full h-48 md:h-72 object-cover rounded-b-2xl md:rounded-2xl shadow-md"
+      />
+    </section>
     <Page title={`Manao ahoana, ${nom || ""}!`} subtitle={`Anio ${formatMg(new Date())}`}>
-      {warning && (
-        <div className="flex items-center gap-3 bg-red-50 border border-red-200 text-red-800 rounded-xl p-4 mb-5">
-          <FontAwesomeIcon icon={faTriangleExclamation} className="text-xl" />
-          <p className="font-medium">Fampitandremana — {warning}</p>
-        </div>
-      )}
+      <section className="mb-6">
+        <h2 className="flex items-center gap-2 text-xl font-bold text-red-700 mb-3">
+          <FontAwesomeIcon icon={faBell} />
+          Fanairana
+        </h2>
+        {warning ? (
+          <div className="flex items-center gap-3 bg-red-50 border border-red-200 text-red-800 rounded-2xl p-4 shadow-sm">
+            <FontAwesomeIcon icon={faTriangleExclamation} className="text-xl" />
+            <p className="font-medium">Toetr'andro: {warning}</p>
+          </div>
+        ) : (
+          <EmptyState>Tsy misy fanairana anio.</EmptyState>
+        )}
+      </section>
 
       <section className="mb-6">
         <h2 className="flex items-center gap-2 text-xl font-bold text-[#0B2B26] mb-3">
@@ -54,14 +72,14 @@ export function AcceuilPage() {
       <section className="grid grid-cols-2 gap-3 mb-6">
         <Link
           to="/Activiter"
-          className="flex flex-col justify-between gap-4 bg-[#03624C] text-white rounded-2xl p-4 shadow-md min-h-28"
+          className="flex flex-col justify-between gap-4 bg-gradient-to-r from-green-700 to-green-600 text-green-100 rounded-2xl p-4 shadow-xl min-h-28 hover:-translate-y-1 transition-transform duration-300"
         >
           <FontAwesomeIcon icon={faCalendarDays} className="text-3xl" />
           <span className="text-lg font-semibold">Alimanaka</span>
         </Link>
         <Link
           to="/Meteo"
-          className="flex flex-col justify-between gap-2 bg-sky-500 text-white rounded-2xl p-4 shadow-md min-h-28"
+          className="flex flex-col justify-between gap-2 bg-blue-400 text-white rounded-2xl p-4 shadow-xl min-h-28 hover:shadow-2xl transition-shadow duration-300"
         >
           <div className="flex items-center justify-between">
             <span className="text-3xl font-bold">
@@ -87,6 +105,7 @@ export function AcceuilPage() {
         <TipOfTheDay />
       </section>
     </Page>
+    </>
   );
 }
 

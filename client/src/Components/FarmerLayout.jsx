@@ -123,20 +123,26 @@ export function FarmerLayout() {
 }
 
 // En-tête et marges communs à chaque écran paysan.
-export function Page({ title, subtitle, back, children }) {
+// tone="dark" : texte clair, pour un écran posé sur une image de fond.
+export function Page({ title, subtitle, back, tone, children }) {
+  const dark = tone === "dark";
   return (
-    <div className="max-w-5xl mx-auto px-4 py-5 md:px-8 md:py-8">
+    <div className="relative max-w-5xl mx-auto px-4 py-5 md:px-8 md:py-8">
       {back && (
         <Link
           to={back}
-          className="inline-flex items-center gap-2 mb-3 text-[#03624C] font-medium py-1"
+          className={`inline-flex items-center gap-2 mb-3 font-medium py-1 ${
+            dark ? "text-green-100" : "text-[#03624C]"
+          }`}
         >
           <FontAwesomeIcon icon={faArrowLeft} />
           Hiverina
         </Link>
       )}
-      <h1 className="text-2xl md:text-3xl font-bold text-[#0B2B26]">{title}</h1>
-      {subtitle && <p className="mt-1 text-gray-600">{subtitle}</p>}
+      <h1 className={`text-2xl md:text-3xl font-bold ${dark ? "text-white drop-shadow" : "text-[#0B2B26]"}`}>
+        {title}
+      </h1>
+      {subtitle && <p className={`mt-1 ${dark ? "text-green-50" : "text-gray-600"}`}>{subtitle}</p>}
       <div className="mt-5">{children}</div>
     </div>
   );
