@@ -1,5 +1,5 @@
 node_modules/
-.env
+/.env
 *.log
 
 # Sauvegardes locales de la base : contiennent les mots de passe des paysans

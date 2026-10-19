@@ -1,13 +1,12 @@
 import { useState } from "react";
 
-const formValidation=(name,value,form)=>{
+const formValidation=(name,value)=>{
     let error="";
 
     if (!value){
         if (name === "nom") error = "Ampidiro ny anarana";
-        if (name === "prenom") error = "fanampiny anarana";
         if (name === "tel") error = "Ampidio ny Laharana finday";
-        if (name === "localisation") error = "faritra";
+        if (name === "localisation") error = "Safidio ny faritra";
         if (name === "mdp") error = "Kaody miafina";
         return error;
     }
@@ -20,12 +19,8 @@ const formValidation=(name,value,form)=>{
     }
 }
     
-    if (name === "mdp") {
-      if (!value) {
-        error = "Kaody miafina";
-      } else if (form.mdp.length < 8) {
-       error = "farafahakeliny 8 isa";
-      }
+    if (name === "mdp" && !/^\d{6}$/.test(value)) {
+      error = "Isa 6 no ilaina";
     }
     return error;
 }
@@ -40,7 +35,7 @@ export const SignForm = (initialValue) => {
         [name]: value,
         }));
 
-        const errorMessages = formValidation(name, value, form);
+        const errorMessages = formValidation(name, value);
         setError((prev) => ({
         ...prev,
         [name]: errorMessages,

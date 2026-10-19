@@ -15,6 +15,15 @@ class Culture_controller{
             
         }
     }
+    static async AffichRegions(req,res){
+        try{
+            const result=await Culture_model.getRegions();
+            return res.json(result);
+        }catch (error) {
+            console.error(error);
+            res.status(500).json({ message: "Erreur dans AffichRegions" });
+        }
+    }
     static async AffichAllVarieter(req,res){
         try{
             const{id_culture,id_categorie}=req.params;

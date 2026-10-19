@@ -24,6 +24,15 @@ class Culture_model {
         }))
         return cultures;
     }
+    static async getRegions(){
+        const result=await db.query(
+            'SELECT DISTINCT c.localisation FROM culture AS c JOIN varieter AS v ON v.id_culture=c.id_culture ORDER BY c.localisation',
+            {
+                type:QueryTypes.SELECT
+            }
+        );
+        return result.map(r=>r.localisation);
+    }
     static async getById(id){
         const result=await db.query(
             'SELECT * FROM culture WHERE id_culture=?',

@@ -19,7 +19,7 @@ const localisation = tokenData?.user?.localisation;
 }
 export const allVariety = async (id_culture,id_varieter) => {
   try {
-        const res = await fetch(`http://localhost:3000/culture/Variety2/${id_culture}/${id_varieter}`);
+        const res = await fetch(`http://localhost:3000/culture/Variety/${id_culture}/${id_varieter}`);
         if(!res.ok){
             const err=await res.json();
             return {success:false,message:err.message||"Erreur du serveur"}
@@ -112,6 +112,25 @@ export const cultureOfP = async () => {
         return { success: false, message: "Erreur dans IsAlredyExistInPratiquer" };
     }
  }
+// Après connexion : l'accueil si le paysan a déjà une variété, sinon le choix de variété.
+export const routeAfterLogin = async () => {
+  const response = await IsAlredyExistInPratiquer();
+  return response.success && response.result.length > 0 ? "/Acceuil" : "/Culture/choice";
+};
+
+export const allRegions = async () => {
+  try {
+    const res = await fetch("http://localhost:3000/culture/regions");
+    if (!res.ok) {
+      return { success: false, message: "Erreur du serveur" };
+    }
+    return { success: true, result: await res.json() };
+  } catch (err) {
+    console.error(err);
+    return { success: false, message: "Erreur dans allRegions" };
+  }
+};
+
 export const PutInPra = async ({ id_varieter }) => {
   const tokenData = getToken();
   const id_paysan = tokenData?.user?.id;

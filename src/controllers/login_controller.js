@@ -3,27 +3,29 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const SECRET_KEY = "maCleSuperSecrete123!"
+// Les paysans restent connectés un mois pour ne pas refaire la connexion à chaque ouverture.
+const SESSION_DURATION = "30d"
 
 class Login_controller {
   static async signup(req, res) {
     try {
-      const { nom, prenom, tel, localisation, mdp } = req.body;
+      const { nom, prenom = "", tel, localisation, mdp } = req.body;
       const isExist = await Login_model.findByTel(tel);
       if (isExist) {
-        return res.json({ message: "Efa manana kaonty ianao" });
+        return res.status(409).json({ message: "Efa manana kaonty ianao, midira" });
       }
       const paysan = new Login_model(0, nom, prenom, tel, localisation, mdp);
       const resultat=await paysan.create();
       if (!resultat){
-        resultat.json({message:"Amarino ny fisoratna anarana"})
+        return res.status(500).json({message:"Amarino ny fisoratna anarana"})
       }
       paysan.id_paysan=resultat[0]
       const token = jwt.sign(
         { id: paysan.id_paysan,
-           nom: paysan.nom_paysan,
+           nom: paysan.nom,
            localisation:paysan.localisation },
         SECRET_KEY,
-        { expiresIn: "1h" }
+        { expiresIn: SESSION_DURATION }
       );
 
       res.json({ message: "Tongasoa", token });
@@ -34,8 +36,7 @@ class Login_controller {
   }
   static async login(req, res) {
     try {
-      const { nom, tel, mdp } = req.body;
-      const user = await Login_model.findByName(nom);
+      const { tel, mdp } = req.body;
       const u=await Login_model.findByTel(tel);
       if (!u) return res.status(400).json({message: "Utilisateur non trouvé"});
       console.log(u);
@@ -52,7 +53,7 @@ class Login_controller {
           localisation:u.localisation
         },
         SECRET_KEY,
-        { expiresIn: "1h" }
+        { expiresIn: SESSION_DURATION }
       );
 
       res.json({ message: "Tongasoa", token });

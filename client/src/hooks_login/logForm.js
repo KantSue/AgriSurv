@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-const formValidation = (name, value, form) => {
+// Pas de longueur imposée sur le code : les anciens comptes ont des codes de 8 caractères.
+const formValidation = (name, value) => {
     let error = "";
 
     if (!value) {
-        if (name === "nom") error = "Ampidiro ny anarana";
-        if (name === "tel") error = "Ampidiro ny laharana fahana";
+        if (name === "tel") error = "Ampidiro ny laharana finday";
         if (name === "mdp") error = "Ampidiro ny kaody miafina";
 
         return error;
@@ -18,15 +18,9 @@ const formValidation = (name, value, form) => {
         } else if (!/^\d{10}$/.test(tele)) {
             error = "Tokony ho isa 10 marina";
         }
-    }if (name === "mdp") {
-        if (!value) {
-            error = "Kaody miafina";
-        } else if (form.mdp.length < 8) {
-        error = "farafahakeliny 8 isa";
-        }
     }
         return error;
-    
+
 };
 export const LogForm = (initialValue) => {
     const [form, setForm] = useState(initialValue);
@@ -39,7 +33,7 @@ export const LogForm = (initialValue) => {
         [name]: value,
         }));
 
-        const errorMessages = formValidation(name, value, form);
+        const errorMessages = formValidation(name, value);
         setError((prev) => ({
         ...prev,
         [name]: errorMessages,
