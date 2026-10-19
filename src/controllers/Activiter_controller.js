@@ -14,13 +14,14 @@ class PlanningsController{
             return res.status(500).json({message:"Tsy mbola manana Planing ianao"})
            
          }
-            const result=await PlanningsModel.getAll(v.id_varieter);
+            const result=await PlanningsModel.getAll(id_varieter);
            if(result.length===0) return res.status(500).json({ message: "Tsy misy fambolena hita" });
            return res.json({success:true,resultat:result})
          
        
         } catch (error) {
             console.error(error);
+            return res.status(500).json({ message: "Erreur serveur" });
         }
   }
             
