@@ -10,7 +10,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "AgriSurv : calendrier cultural FOFIFA par région, conseils, météo et alertes pour les paysans malgaches",
   "dependencies": {
     "@google-cloud/text-to-speech": "^6.4.0",
     "bcrypt": "^6.0.0",
