@@ -11,7 +11,7 @@ INSERT INTO paysans (id_paysan, nom_paysan, prenom_paysan, num_telephone, locali
   (9002, 'Rasoa', 'Demo', '0340000002', 'Alaotra Mangoro', '$2b$10$HyIch/.Ctk3AWT5v48srvuhEFF8jrAxALqVwuWn4W2F/nWh2XochC', 'paysan'),
   (9003, 'Randria', 'Demo', '0340000003', 'Sava', '$2b$10$Vck6BW.TVAtx5WG.BoTYBe42uNWdjf3RqA2z0V5e/lxL6heNMsbh2', 'paysan');
 
--- Rakoto : Madikatra (Analamanga, an-drano) ; Rasoa : MKX, Mihary (Alaotra) ; Randria : sans variété
+-- Rakoto : Madikatra (Analamanga, an-drano) ; Rasoa : Sebota 231, Madikatra (Alaotra) ; Randria : sans variété
 INSERT INTO pratiquer (id_paysan, id_varieter) VALUES
   (9001, 1),
-  (9002, 100);
+  (9002, 101);

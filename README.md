@@ -22,10 +22,10 @@ Le code est `123456` pour tous les comptes. Sur la page de connexion, un clic su
 |---|---|---|---|
 | `0340000000` | Admin | — | Espace admin : statistiques, calendriers, torohevitra |
 | `0340000001` | Rakoto Demo | Analamanga | Calendrier du riz an-drano Madikatra |
-| `0340000002` | Rasoa Demo | Alaotra Mangoro | Calendrier MKX, Mihary (zone Alaotra) |
+| `0340000002` | Rasoa Demo | Alaotra Mangoro | Calendrier Sebota 231, Madikatra (zone Alaotra) |
 | `0340000003` | Randria Demo | Sava | Pas encore de variété : montre l'écran de choix |
 
-Les calendriers couvrent la saison octobre 2025 – juin 2026 : après juin 2026, toutes les activités apparaissent comme passées.
+Les calendriers couvrent la saison octobre 2026 – juin 2027 (dates FOFIFA 2025-2026 décalées d'un an par `maj_saison_2026_2027.sql`) : fin octobre 2026, Rakoto et Rasoa ont déjà des lahasa en cours.
 
 ## Technologies
 
@@ -44,6 +44,7 @@ Créer la base puis importer la structure, les données de référence et les co
 ```sh
 mysql -u root -e "CREATE DATABASE tantsaha_co2 CHARACTER SET utf8mb4"
 mysql -u root --default-character-set=utf8mb4 tantsaha_co2 < tantsaha_co2.sql
+mysql -u root --default-character-set=utf8mb4 tantsaha_co2 < maj_saison_2026_2027.sql
 mysql -u root --default-character-set=utf8mb4 tantsaha_co2 < comptes_demo.sql
 ```
 
@@ -95,7 +96,8 @@ L'application s'ouvre sur http://localhost:3001.
 ├── tantsaha_co2.sql         structure de la base + données de référence
 ├── comptes_demo.sql         comptes de démonstration (admin + paysans)
 ├── maj_admin.sql            ajoute le rôle admin sur une base existante
-└── maj_fofifa_riz_2025_2026.sql   mise à jour des calendriers FOFIFA sur une base existante
+├── maj_fofifa_riz_2025_2026.sql   mise à jour des calendriers FOFIFA sur une base existante
+└── maj_saison_2026_2027.sql       décale les calendriers sur la saison 2026-2027
 ```
 
 ## API principale
@@ -122,6 +124,7 @@ Pour une base installée avant l'ajout des calendriers FOFIFA, appliquer seuleme
 
 ```sh
 mysql -u root --default-character-set=utf8mb4 tantsaha_co2 < maj_fofifa_riz_2025_2026.sql
+mysql -u root --default-character-set=utf8mb4 tantsaha_co2 < maj_saison_2026_2027.sql
 ```
 
 Les tables sont en MyISAM (pas de transaction) : faire une sauvegarde avec `mysqldump` avant.
